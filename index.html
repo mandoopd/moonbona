@@ -1,204 +1,189 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎄 크리스마스 심리테스트 💜🦋🌙</title>
-<style>
-  body {
-    font-family: 'Pretendard', sans-serif;
-    background: linear-gradient(180deg, #FFBE98, #8A2BE2);
-    color: #fff;
-    text-align: center;
-    padding: 40px 20px;
-    overflow-x: hidden;
-  }
-  .quiz-box {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 600px;
-    margin: 0 auto;
-    box-shadow: 0 0 25px rgba(255,255,255,0.3);
-  }
-  button {
-    display: inline-block;
-    margin: 10px;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.25);
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.25s;
-  }
-  button:hover {
-    transform: scale(1.05);
-    background: rgba(255, 255, 255, 0.4);
-  }
-  #interpretation, #result {
-    margin-top: 20px;
-    font-size: 17px;
-    line-height: 1.6;
-    animation: fadeIn 0.8s ease;
-  }
-  .nav-buttons {
-    margin-top: 20px;
-  }
-  @keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
-  }
-
-  /* 눈 내리는 효과 */
-  .snowflake {
-    position: fixed;
-    top: -10px;
-    color: #fff;
-    font-size: 14px;
-    animation: fall linear infinite;
-    z-index: 9999;
-  }
-  @keyframes fall {
-    0% {transform: translateY(0);}
-    100% {transform: translateY(110vh);}
-  }
-
-  /* 산타 등장 */
-  #santa {
-    position: fixed;
-    bottom: -150px;
-    right: -200px;
-    font-size: 80px;
-    opacity: 0;
-    transition: all 1.5s ease;
-  }
-  #santa.active {
-    opacity: 1;
-    bottom: 30px;
-    right: 30px;
-    transform: rotate(-10deg);
-  }
-
-  /* 모바일 대응 */
-  @media (max-width: 600px) {
-    h1 { font-size: 22px; }
-    button { font-size: 14px; padding: 10px 16px; }
-    .quiz-box { padding: 20px; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>🎄 크리스마스 심리테스트</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Pretendard', sans-serif; margin: 0; padding: 0; }
+    body {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, #FFBE98 0%, #D291BC 50%, #8A2BE2 100%);
+      overflow: hidden;
+    }
+    .container {
+      width: 90vw;
+      max-width: 420px;
+      height: 90vh;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    h2 { font-size: 1.4rem; margin-bottom: 15px; line-height: 1.5; text-align: center; }
+    .btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 6px 0;
+      font-size: 1rem;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .btn:hover { background: rgba(255, 255, 255, 0.35); }
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .result { text-align: center; font-size: 1rem; line-height: 1.6; margin-top: 10px; }
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: white;
+      font-size: 1rem;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+    .santa {
+      position: fixed;
+      bottom: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 3rem;
+      opacity: 0;
+      transition: all 1s ease;
+    }
+    .santa.show {
+      bottom: 20px;
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
-  <div class="quiz-box">
-    <h1>🎄 당신의 크리스마스 마음색은?</h1>
-    <div id="quiz"></div>
-    <div id="interpretation"></div>
-    <div class="nav-buttons" id="nav"></div>
-    <div id="result"></div>
+  <div class="container" id="quiz">
+    <h2 id="question">🎅 크리스마스엔 어떤 하루를 보내고 싶나요?</h2>
+    <button class="btn" onclick="selectAnswer('plan')">완벽한 일정표로 알차게 보내기</button>
+    <button class="btn" onclick="selectAnswer('free')">즉흥적으로 눈 내리는 데로 걷기</button>
+    <div class="result" id="result"></div>
+    <div class="navigation">
+      <button class="btn" id="prevBtn" onclick="prevQuestion()" style="visibility:hidden;">이전</button>
+      <button class="btn" id="nextBtn" onclick="nextQuestion()" style="visibility:hidden;">다음</button>
+    </div>
   </div>
+  <div class="santa" id="santa">🎅 Ho Ho Ho~!</div>
+  <script>
+    const questions = [
+      {
+        q: "🎅 크리스마스엔 어떤 하루를 보내고 싶나요?",
+        a1: { text: "완벽한 일정표로 알차게 보내기", type: "plan", desc: "📋 융통성 국 끓여먹은 타입이시네요! 당신은 계획이 철저하고 안정 속에서 행복을 느껴요. 주변은 든든해하지만, 가끔은 자신에게 너무 엄격할 수 있답니다. 오늘은 일정표를 덮고, 눈 내리는 대로 흘러가보는 건 어때요?" },
+        a2: { text: "즉흥적으로 눈 내리는 데로 걷기", type: "free", desc: "❄️ 눈처럼 자유로운 영혼이시네요! 당신은 흐름을 타고 즐기는 스타일로, 순간을 만끽할 줄 알아요. 하지만 가끔은 계획 없는 하루가 혼돈이 되기도 해요. 균형 잡힌 즉흥이 당신을 더 반짝이게 할 거예요." }
+      },
+      {
+        q: "🎁 친구가 크리스마스 선물을 깜빡했다면?",
+        a1: { text: "괜찮다고 말하지만 살짝 섭섭함", type: "sensitive", desc: "🎄 감정선이 예민한 크리스마스 감성러! 당신은 마음의 온도를 중요시하고, 작은 것에서도 의미를 찾아요. 덕분에 따뜻하지만, 가끔 상처도 잘 받죠. 감정을 숨기지 말고, 솔직하게 말하는 게 선물보다 값질 때도 있답니다." },
+        a2: { text: "전혀 신경 안 씀! 난 이미 내 선물 있음", type: "independent", desc: "🎁 인생 자급자족형 산타! 당신은 스스로의 기쁨을 잘 챙기는 타입이에요. 남에게 의존하지 않아 멋지지만, 가끔은 누군가의 배려를 받는 것도 괜찮아요. 함께 행복을 나누면 그 기쁨은 두 배가 되죠!" }
+      }
+    ];
 
-  <div id="santa">🎅</div>
+    let current = 0;
+    const qElem = document.getElementById("question");
+    const resultElem = document.getElementById("result");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const santa = document.getElementById("santa");
 
-<script>
-const questions = [
-  { q: "크리스마스 계획을 세울 때 나는…", a: [ { text: "A. 미리 일정을 세워두지 않으면 불안하다.", type: "plan" }, { text: "B. 즉흥적으로 움직이는 게 더 재밌다.", type: "feel" } ] },
-  { q: "크리스마스 선물을 받으면 나는…", a: [ { text: "A. 감동하고, 이 사람이 나를 생각했다는 게 고맙다.", type: "emotion" }, { text: "B. ‘왜 주지?’ 하며 의미를 먼저 생각한다.", type: "logic" } ] },
-  { q: "크리스마스 트리를 꾸밀 때 나는…", a: [ { text: "A. 감성적으로 예쁘게 꾸미는 게 행복하다.", type: "art" }, { text: "B. 효율적으로 깔끔하게 하는 게 낫다.", type: "practical" } ] },
-  { q: "약속이 갑자기 취소된다면…", a: [ { text: "A. 혼자 보내는 것도 나쁘지 않다고 생각한다.", type: "solo" }, { text: "B. 왠지 모르게 서운하고 허전하다.", type: "social" } ] },
-  { q: "눈 내리는 날, 창밖을 볼 때 나는…", a: [ { text: "A. 예쁘다, 낭만적이다. 감성이 차오른다.", type: "dreamy" }, { text: "B. 내일 도로 미끄럽겠네… 실용적으로 생각한다.", type: "real" } ] }
-];
+    function showQuestion() {
+      const q = questions[current];
+      qElem.textContent = q.q;
+      document.querySelectorAll(".btn")[0].textContent = q.a1.text;
+      document.querySelectorAll(".btn")[1].textContent = q.a2.text;
+      resultElem.textContent = "";
+      prevBtn.style.visibility = current > 0 ? "visible" : "hidden";
+      nextBtn.style.visibility = "hidden";
+    }
 
-const results = {
-  plan: "🎁 융통성 국 끓여먹은 타입이시네요! 질서와 통제를 통해 안정감을 얻는 완벽 실행러지만, 가끔은 즉흥의 맛도 필요해요!",
-  feel: "🎢 감정파 인생러! 오늘 기분이 내 일정이에요! 분위기 메이커지만, 내일의 나에게 혼날 수도 있죠.",
-  emotion: "💖 감정선 예민보스! 진심 탐지기 장착 완료! 따뜻하지만 기대치가 높으면 실망도 커요.",
-  logic: "🧠 선물엔 다 이유가 있다 타입! 분석력 갑이지만, 순수한 마음도 가끔 놓치죠.",
-  art: "🌈 감성 필터 ON! 트리보다 마음이 반짝! 분위기를 주도하지만 현실 기능이 가끔 정지됩니다.",
-  practical: "⚙️ 효율성의 화신! 감성은 내년에 하자 타입! 합리적이지만 가끔은 감성도 필요해요.",
-  solo: "🧘 혼자도 괜찮아~ 혼자라서 더 좋아~ 쿨하고 자립적인데, 너무 쿨해서 외로워질 수도...",
-  social: "🫶 사람 없으면 텅 빈 마음형! 따뜻하지만 인정 욕구가 살짝 과할지도?",
-  dreamy: "❄️ 낭만 레벨 만렙! 감성 플레이리스트 자동 재생! 예술적이지만 현실감이 살짝 떨어질 수도 있죠.",
-  real: "🪓 현실감 200%! 교통지옥도 예측 가능! 이성적이지만 낭만 결핍 주의보 발령!"
-};
+    function selectAnswer(type) {
+      const desc = type === 'plan' || type === 'free' ? questions[current][type === 'plan' ? 'a1' : 'a2'].desc : 
+                    type === 'sensitive' ? questions[current].a1.desc : questions[current].a2.desc;
+      resultElem.textContent = desc;
+      nextBtn.style.visibility = "visible";
+    }
 
-let current = 0;
-let answers = [];
-const quizBox = document.getElementById('quiz');
-const interpretationBox = document.getElementById('interpretation');
-const navBox = document.getElementById('nav');
-const resultBox = document.getElementById('result');
-const santa = document.getElementById('santa');
+    function nextQuestion() {
+      if (current < questions.length - 1) {
+        current++;
+        showQuestion();
+      } else {
+        showSanta();
+      }
+    }
 
-function showQuestion() {
-  if (current < questions.length) {
-    const q = questions[current];
-    interpretationBox.innerHTML = '';
-    navBox.innerHTML = '';
-    resultBox.innerHTML = '';
-    quizBox.innerHTML = `<h2>${q.q}</h2>` +
-      q.a.map(opt => `<button onclick=selectAnswer('${opt.type}')>${opt.text}</button>`).join('');
-  } else {
-    showResult();
-  }
-}
+    function prevQuestion() {
+      if (current > 0) {
+        current--;
+        showQuestion();
+      }
+    }
 
-function selectAnswer(type) {
-  answers[current] = type;
-  interpretationBox.innerHTML = `<p>${results[type]}</p>`;
-  navBox.innerHTML = `<button onclick='prevQuestion()'>이전</button>` +
-                     (current < questions.length - 1 ? `<button onclick='nextQuestion()'>다음</button>` : `<button onclick='showResult()'>결과 보기</button>`);
-}
+    function showSanta() {
+      document.getElementById("quiz").innerHTML = `
+        <h2>🎅 당신의 크리스마스 심리 여행 끝!</h2>
+        <p class="result">당신의 마음속 산타는 이미 선물을 준비했어요.<br>다시 시작해볼까요?</p>
+        <button class="btn" onclick="restart()">🎁 처음으로</button>
+      `;
+      santa.classList.add("show");
+    }
 
-function nextQuestion() {
-  if (current < questions.length - 1) {
-    current++;
-    showQuestion();
-  } else {
-    showResult();
-  }
-}
+    function restart() {
+      santa.classList.remove("show");
+      current = 0;
+      document.getElementById("quiz").innerHTML = `
+        <h2 id="question"></h2>
+        <button class="btn" onclick="selectAnswer('plan')"></button>
+        <button class="btn" onclick="selectAnswer('free')"></button>
+        <div class="result" id="result"></div>
+        <div class="navigation">
+          <button class="btn" id="prevBtn" onclick="prevQuestion()">이전</button>
+          <button class="btn" id="nextBtn" onclick="nextQuestion()">다음</button>
+        </div>
+      `;
+      initQuiz();
+    }
 
-function prevQuestion() {
-  if (current > 0) {
-    current--;
-    showQuestion();
-  }
-}
+    function initQuiz() {
+      showQuestion();
+    }
 
-function showResult() {
-  const freq = {};
-  answers.forEach(a => freq[a] = (freq[a] || 0) + 1);
-  const dominant = Object.keys(freq).reduce((a, b) => freq[a] > freq[b] ? a : b);
-  quizBox.innerHTML = `<h2>🎅 당신의 크리스마스 결과는...</h2>`;
-  interpretationBox.innerHTML = '';
-  navBox.innerHTML = `<button onclick='restartQuiz()'>처음으로</button>`;
-  resultBox.innerHTML = `<p>${results[dominant]}</p>`;
-}
+    function createSnowflakes() {
+      for (let i = 0; i < 30; i++) {
+        let snow = document.createElement('div');
+        snow.classList.add('snowflake');
+        snow.textContent = '❄';
+        snow.style.left = Math.random() * 100 + 'vw';
+        snow.style.animationDuration = 5 + Math.random() * 5 + 's';
+        snow.style.opacity = Math.random();
+        document.body.appendChild(snow);
+        setTimeout(() => snow.remove(), 10000);
+      }
+    }
 
-function restartQuiz() {
-  santa.classList.add('active');
-  setTimeout(() => santa.classList.remove('active'), 3000);
-  current = 0;
-  answers = [];
-  showQuestion();
-}
-
-function createSnowflake() {
-  const snowflake = document.createElement('div');
-  snowflake.classList.add('snowflake');
-  snowflake.innerText = '❄';
-  snowflake.style.left = Math.random() * 100 + 'vw';
-  snowflake.style.animationDuration = 3 + Math.random() * 5 + 's';
-  snowflake.style.opacity = Math.random();
-  snowflake.style.fontSize = 12 + Math.random() * 14 + 'px';
-  document.body.appendChild(snowflake);
-  setTimeout(() => snowflake.remove(), 8000);
-}
-
-setInterval(createSnowflake, 200);
-
-showQuestion();
-</script>
+    setInterval(createSnowflakes, 1500);
+    initQuiz();
+  </script>
 </body>
 </html>
